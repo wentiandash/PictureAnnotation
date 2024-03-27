@@ -42,9 +42,15 @@
               left: `${item.x * 100}%`,
               top: `${item.y * 100}%`,
             }">
-                  <div class="shoppable-image-dot">
-                    <!-- <p style="color: red">{{ item.x }}</p> -->
-                  </div>
+                  <a-popover title="Title">
+                    <template #content>
+                      <p>Content</p>
+                      <p>Content</p>
+                    </template>
+                    <div class="shoppable-image-dot">
+                      <!-- <p style="color: red">{{ item.x }}</p> -->
+                    </div>
+                  </a-popover>
                 </div>
                 <!-- </div> -->
               </div>
@@ -64,9 +70,15 @@
               left: `${item.x * 100}%`,
               top: `${item.y * 100}%`,
             }">
-                  <div class="shoppable-image-dot">
-                    <!-- <p style="color: red">{{ item.x }}</p> -->
-                  </div>
+                  <a-popover title="Title">
+                    <template #content>
+                      <p>Content</p>
+                      <p>Content</p>
+                    </template>
+                    <div class="shoppable-image-dot">
+                      <!-- <p style="color: red">{{ item.x }}</p> -->
+                    </div>
+                  </a-popover>
                 </div>
                 <!-- </div> -->
               </div>
