@@ -9,25 +9,20 @@
               <div class="i-image">
                 <img class="item" :src="i.contents[0].url" :key="i.id" />
               </div>
-              <div
-                @mouseenter="changeActive($event)"
-                @mouseleave="removeActive($event)"
-                class="pub-shoppable-image"
-              >
-                <!-- <div class="shoppable-image-list"> -->
-                <!-- <p style="color: red">{{ i.contents[0].interactionPoints }}</p> -->
-                <div
-                  :key="item"
-                  v-for="item in i.contents[0].interactionPoints"
-                  class="shoppable-image-item"
-                  :style="{
-                    left: `${item.x * 100}%`,
-                    top: `${item.y * 100}%`,
-                  }"
-                >
-                  <div class="shoppable-image-dot">
-                    <!-- <p style="color: red">{{ item.x }}</p> -->
-                  </div>
+              <div @mouseenter="changeActive($event)" @mouseleave="removeActive($event)" class="pub-shoppable-image">
+                <div :key="item" v-for="item in i.contents[0].interactionPoints" class="shoppable-image-item" :style="{
+              left: `${item.x * 100}%`,
+              top: `${item.y * 100}%`,
+            }">
+                  <a-popover title="Title">
+                    <template #content>
+                      <p>Content</p>
+                      <p>Content</p>
+                    </template>
+
+                    <div class="shoppable-image-dot">
+                    </div>
+                  </a-popover>
                 </div>
                 <!-- </div> -->
               </div>
@@ -40,22 +35,13 @@
               <div class="i-image">
                 <img class="item" :src="i.contents[0].url" :key="i.id" />
               </div>
-              <div
-                @mouseenter="changeActive($event)"
-                @mouseleave="removeActive($event)"
-                class="pub-shoppable-image"
-              >
+              <div @mouseenter="changeActive($event)" @mouseleave="removeActive($event)" class="pub-shoppable-image">
                 <!-- <div class="shoppable-image-list"> -->
                 <!-- <p style="color: red">{{ i.contents[0].interactionPoints }}</p> -->
-                <div
-                  :key="item"
-                  v-for="item in i.contents[0].interactionPoints"
-                  class="shoppable-image-item"
-                  :style="{
-                    left: `${item.x * 100}%`,
-                    top: `${item.y * 100}%`,
-                  }"
-                >
+                <div :key="item" v-for="item in i.contents[0].interactionPoints" class="shoppable-image-item" :style="{
+              left: `${item.x * 100}%`,
+              top: `${item.y * 100}%`,
+            }">
                   <div class="shoppable-image-dot">
                     <!-- <p style="color: red">{{ item.x }}</p> -->
                   </div>
@@ -71,22 +57,13 @@
               <div class="i-image">
                 <img class="item" :src="i.contents[0].url" :key="i.id" />
               </div>
-              <div
-                @mouseenter="changeActive($event)"
-                @mouseleave="removeActive($event)"
-                class="pub-shoppable-image"
-              >
+              <div @mouseenter="changeActive($event)" @mouseleave="removeActive($event)" class="pub-shoppable-image">
                 <!-- <div class="shoppable-image-list"> -->
                 <!-- <p style="color: red">{{ i.contents[0].interactionPoints }}</p> -->
-                <div
-                  :key="item"
-                  v-for="item in i.contents[0].interactionPoints"
-                  class="shoppable-image-item"
-                  :style="{
-                    left: `${item.x * 100}%`,
-                    top: `${item.y * 100}%`,
-                  }"
-                >
+                <div :key="item" v-for="item in i.contents[0].interactionPoints" class="shoppable-image-item" :style="{
+              left: `${item.x * 100}%`,
+              top: `${item.y * 100}%`,
+            }">
                   <div class="shoppable-image-dot">
                     <!-- <p style="color: red">{{ item.x }}</p> -->
                   </div>
@@ -104,54 +81,50 @@
 import { computed, reactive, onMounted, ref } from "vue";
 import { getCategoryData } from "@/service/category";
 import { getRecommend } from "@/service/recommend";
-const data1 = reactive({ list: [] }),
-  data2 = reactive({ list: [] }),
-  data3 = reactive({ list: [] }),
-  i = ref(0);
+const data1 = ref({ list: [] });
+const data2 = ref({ list: [] });
+const data3 = ref({ list: [] });
+// i = ref(0);
 
 function changeActive($event) {
-  // console.log($event.target.children);
-  let array = $event.target.children;
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    // console.log(element);
-    element.className = "shoppable-image-item active";
-    let dotArray = array[index].childNodes;
-    for (let index = 0; index < dotArray.length; index++) {
-      const doValue = dotArray[index];
-      doValue.className = "shoppable-image-dot active";
-    }
-  }
+  let array = $event.currentTarget.querySelectorAll('.shoppable-image-item');
+  array.forEach(element => {
+    element.classList.add('active');
+    let dotArray = element.querySelectorAll('.shoppable-image-dot');
+    dotArray.forEach(dot => {
+      dot.classList.add('active');
+    });
+  });
+  // 调试语句
+  console.log('Active class added');
+  console.log($event.currentTarget);
+  console.log($event.currentTarget.querySelector('.shoppable-image-dot'));
 }
+
 function removeActive($event) {
-  let array = $event.target.children;
-  for (let index = 0; index < array.length; index++) {
-    const element = array[index];
-    console.log(element.className);
-    element.className = "shoppable-image-item";
-    let dotArray = array[index].childNodes;
-    for (let index = 0; index < dotArray.length; index++) {
-      const doValue = dotArray[index];
-      doValue.className = "shoppable-image-dot";
-    }
-  }
-  // console.log($event.target.children[0].className);
+  let array = $event.currentTarget.querySelectorAll('.shoppable-image-item');
+  array.forEach(element => {
+    element.classList.remove('active');
+    let dotArray = element.querySelectorAll('.shoppable-image-dot');
+    dotArray.forEach(dot => {
+      dot.classList.remove('active');
+    });
+  });
 }
+
 onMounted(async () => {
   const result = await getRecommend();
-  console.log(result.result[0].inspirations);
-  let data = result.result[0].inspirations;
-  console.log(i.value);
-  while (i.value < data.length) {
-    data1.list.push(data[i.value++]);
-    if (i.value < data.length) {
-      data2.list.push(data[i.value++]);
+  const inspirations = result.result[0].inspirations;
+
+  for (let i = 0; i < inspirations.length; i += 3) {
+    data1.value.list.push(inspirations[i]);
+    if (i + 1 < inspirations.length) {
+      data2.value.list.push(inspirations[i + 1]);
     }
-    if (i.value < data.length) {
-      data3.list.push(data[i.value++]);
+    if (i + 2 < inspirations.length) {
+      data3.value.list.push(inspirations[i + 2]);
     }
   }
-  console.log(data2.list);
 });
 </script>
 <style lang="less" scoped>
@@ -160,6 +133,7 @@ onMounted(async () => {
   padding: 0px;
   background-color: #ffffff;
 }
+
 .content {
   display: block;
   height: 100%;
@@ -167,12 +141,15 @@ onMounted(async () => {
   // position: absolute;
   width: 100%;
 }
+
 .i-image {
   height: inherit;
+
   img {
     height: 100%;
   }
 }
+
 .pub-shoppable-image {
   background: 0 0;
   height: 100%;
@@ -182,34 +159,41 @@ onMounted(async () => {
   width: 100%;
   z-index: 5;
 }
+
 .flexPic {
   max-width: 1440px;
   margin: 0px auto;
 }
+
 .masonry {
   display: flex;
   flex-direction: row;
+
   .colmun {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: 0 3px;
+
     .item {
       width: 100%;
     }
   }
 }
+
 .shoppable-image-list {
   // height: 100%;
   position: relative;
   width: 100%;
 }
+
 .shoppable-image-item {
   cursor: pointer;
   height: 1px;
   position: absolute;
   width: 1px;
   border-radius: 50%;
+
   .shoppable-image-dot {
     align-items: center;
     background: hsla(0, 0%, 47%, 0.5);
@@ -239,22 +223,44 @@ onMounted(async () => {
     transition: transform 0.25s ease-in-out;
     width: 12px;
   }
+
   .shoppable-image-dot:before {
     content: "";
     display: block;
     inset: -8px;
     position: absolute;
   }
+
   .shoppable-image-dot .active {
     background-color: red;
     // border-color: #ffffff80;
     opacity: 1;
     visibility: visible;
   }
+
+  .shoppable-image-dot:hover {
+    align-items: center;
+    background: hsla(0, 0%, 47%, 0.5);
+    border: 2px solid transparent;
+    border-radius: 50%;
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    opacity: 1;
+    padding: 0;
+    position: absolute;
+    transform: translate(-50%) translateY(-50%);
+    transition: border-color 0.25s ease-in-out, opacity 0.25s ease-in-out,
+      visibility 0.25s ease-in-out;
+    visibility: visible;
+    width: 32px;
+  }
 }
+
 .shoppable-image-item.active {
   display: block;
 }
+
 .pub-shoppable-image .shoppable-image-item .shoppable-image-dot.active {
   border-color: #ffffff80;
   opacity: 1;
