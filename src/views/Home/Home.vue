@@ -5,19 +5,23 @@
       <div class="masonry">
         <div class="colmun">
           <div class="content">
-            <div style="position: relative" v-for="i in data1.list" :key="i">
+            <router-link style="position: relative" v-for="i in data1.list" :key="i" :to="`/explore/${i.id}`">
               <div class="i-image">
                 <img class="item" :src="i.contents[0].url" :key="i.id" />
               </div>
-              <div @mouseenter="changeActive($event)" @mouseleave="removeActive($event)" class="pub-shoppable-image">
+              <div @mouseenter="changeActive($event)" @mouseleave="removeActive($event)"
+                class="pub-shoppable-image">
                 <div :key="item" v-for="item in i.contents[0].interactionPoints" class="shoppable-image-item" :style="{
               left: `${item.x * 100}%`,
               top: `${item.y * 100}%`,
             }">
-                  <a-popover title="Title">
+                  <a-popover title="NATTJASMIN">
                     <template #content>
-                      <p>Content</p>
-                      <p>Content</p>
+                      <p style="clip: rect(1px, 1px, 1px, 1px);color: #A9A9A9;">Duvet cover and pillowcase(s) </p>
+                      <p>
+                        <span style="font-size: 18px;">$</span>
+                        <span>79.66</span>
+                      </p>
                     </template>
 
                     <div class="shoppable-image-dot">
@@ -26,7 +30,7 @@
                 </div>
                 <!-- </div> -->
               </div>
-            </div>
+            </router-link>
           </div>
         </div>
         <div class="colmun">
@@ -87,16 +91,35 @@
         </div>
       </div>
     </div>
+    <a-modal v-model:visible="dialogVisible" width="50%" title="Basic Modal" @ok="handleOk">
+      <router-view></router-view>
+    </a-modal>
   </div>
 </template>
 <script setup>
 import { computed, reactive, onMounted, ref } from "vue";
 import { getCategoryData } from "@/service/category";
 import { getRecommend } from "@/service/recommend";
+import { useRoute,useRouter } from 'vue-router';
+
+
+const route = useRoute()
+const router = useRouter()
 const data1 = ref({ list: [] });
 const data2 = ref({ list: [] });
 const data3 = ref({ list: [] });
-// i = ref(0);
+
+const lastRoute = computed(() => route.matched[route.matched.length - 1])
+const dialogVisible = computed({
+  get() {
+    return lastRoute.value.name == 'Detail'
+  },
+  set(val) {
+    if (!val) {
+      router.go(-1)
+    }
+  },
+})
 
 function changeActive($event) {
   let array = $event.currentTarget.querySelectorAll('.shoppable-image-item');
@@ -107,10 +130,6 @@ function changeActive($event) {
       dot.classList.add('active');
     });
   });
-  // 调试语句
-  console.log('Active class added');
-  console.log($event.currentTarget);
-  console.log($event.currentTarget.querySelector('.shoppable-image-dot'));
 }
 
 function removeActive($event) {
@@ -123,11 +142,16 @@ function removeActive($event) {
     });
   });
 }
+// const openBlog = (index) => {
+//   console.log(index);
+//   router.push('/photo');
+// };
+
 
 onMounted(async () => {
   const result = await getRecommend();
   const inspirations = result.result[0].inspirations;
-
+  console.log(result)
   for (let i = 0; i < inspirations.length; i += 3) {
     data1.value.list.push(inspirations[i]);
     if (i + 1 < inspirations.length) {
